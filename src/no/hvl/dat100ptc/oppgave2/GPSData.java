@@ -9,12 +9,9 @@ public class GPSData {
 	protected int antall = 0;
 
 	public GPSData(int n) {
-
-		// TODO - START
+		antall = 0;
+		gpspoints = new GPSPoint[n];
 		
-		throw new UnsupportedOperationException(TODO.construtor("GPSData"));
-
-		// TODO - SLUTT
 	}
 
 	public GPSPoint[] getGPSPoints() {
@@ -22,25 +19,23 @@ public class GPSData {
 	}
 	
 	protected boolean insertGPS(GPSPoint gpspoint) {
-
 		boolean inserted = false;
-
-		// TODO - START
-		
-		throw new UnsupportedOperationException(TODO.method());
-
-		// TODO - SLUTT
+		if (antall<gpspoints.length && !inserted) {
+			gpspoints[antall] = gpspoint;
+			antall++;  // Øker antall med 1 for å sette neste objeket i neste indeks
+			inserted = true;  
+		}
+	return inserted;  // returnerer true får å vise om objektet ble satt inn eller ikke
+ 
 	}
 
 	public boolean insert(String time, String latitude, String longitude, String elevation) {
 
 		GPSPoint gpspoint;
 
-		// TODO - START
+		gpspoint = GPSDataConverter.convert(time, latitude, longitude, elevation);
 		
-		throw new UnsupportedOperationException(TODO.method());
-
-		// TODO - SLUTT
+		return insertGPS(gpspoint);
 		
 	}
 
@@ -48,13 +43,12 @@ public class GPSData {
 
 		System.out.println("====== Konvertert GPS Data - START ======");
 
-		// TODO - START
-
-		throw new UnsupportedOperationException(TODO.method());
-
-		// TODO - SLUTT
+		for (GPSPoint gpspoint : gpspoints) {  // bruker utvidet for-løkke til å skrive ut 
+			System.out.println(gpspoint.toString());
+			
+		}
 		
-		// System.out.println("====== Konvertert GPS Data - SLUTT ======");
+		 System.out.println("====== Konvertert GPS Data - SLUTT ======");
 
 	}
 }

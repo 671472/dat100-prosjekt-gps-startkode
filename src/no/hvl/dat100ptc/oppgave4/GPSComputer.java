@@ -31,11 +31,10 @@ public class GPSComputer {
 
 		double distance = 0;
 
-		// TODO - START
-
-		throw new UnsupportedOperationException(TODO.method());
-
-		// TODO - SLUTT
+		for (int i=0; i<gpspoints.length-1; i++) {
+			distance += GPSUtils.distance(gpspoints[i], gpspoints[i+1]);
+		}
+		return distance;
 
 	}
 
@@ -44,54 +43,63 @@ public class GPSComputer {
 
 		double elevation = 0;
 
-		// TODO - START
+		for (int i=0; i<gpspoints.length-1; i++) {
+			if(gpspoints[i].getElevation() < gpspoints[i+1].getElevation()) {
+				elevation += gpspoints[i+1].getElevation() - gpspoints[i].getElevation();
+			}		
+			
+		}
+		return elevation;
 
-		throw new UnsupportedOperationException(TODO.method());
-
-		// TODO - SLUTT
 
 	}
 
 	// beregn total tiden for hele turen (i sekunder)
 	public int totalTime() {
-
-		throw new UnsupportedOperationException(TODO.method());
-
+		int secs = gpspoints[gpspoints.length-1].getTime() - gpspoints[0].getTime();
+		return secs;
+		
 	}
 		
-	// beregn gjennomsnitshastighets mellom hver av gps punktene
-
 	public double[] speeds() {
 		
-		// TODO - START		// OPPGAVE - START
+		double [] speeds = new double [gpspoints.length-1];
 		
-		throw new UnsupportedOperationException(TODO.method());
-
-		// TODO - SLUTT
+		for (int i=0; i<speeds.length; i++) {
+			speeds[i] = GPSUtils.speed(gpspoints[i], gpspoints[i+1]);
+		}
+		return speeds;
 
 	}
 	
 	public double maxSpeed() {
 		
 		double maxspeed = 0;
+		double [] maxspeedtab = speeds();
 		
-		// TODO - START
-		
-		throw new UnsupportedOperationException(TODO.method());
-		
-		// TODO - SLUTT
+		for (int i= 0; i<maxspeedtab.length-1; i++) {
+			if (maxspeedtab [i+1] > maxspeedtab[i] ) {
+				maxspeed = maxspeedtab[i+1];
+			}
+			
+		}
+		return maxspeed;
 		
 	}
 
 	public double averageSpeed() {
 
 		double average = 0;
-		
-		// TODO - START
-		
-		throw new UnsupportedOperationException(TODO.method());
-		
-		// TODO - SLUTT
+//		double [] gjennomsnitt = speeds();
+//		 for (int i=0; i<gpspoints.length-1; i++) {
+//			 average += gjennomsnitt[i];
+//		 }
+//		 average = average/gjennomsnitt.length;
+//		
+//		return average;
+//		
+		average = totalDistance()/totalTime()*3.6;
+		return average;
 		
 	}
 
