@@ -31,7 +31,8 @@ public class GPSComputer {
 
 		double distance = 0;
 
-		for (int i=0; i<gpspoints.length-1; i++) {
+		for(int i=0; i<gpspoints.length-1; i++) {
+			
 			distance += GPSUtils.distance(gpspoints[i], gpspoints[i+1]);
 		}
 		return distance;
@@ -43,62 +44,52 @@ public class GPSComputer {
 
 		double elevation = 0;
 
-		for (int i=0; i<gpspoints.length-1; i++) {
-			if(gpspoints[i].getElevation() < gpspoints[i+1].getElevation()) {
-				elevation += gpspoints[i+1].getElevation() - gpspoints[i].getElevation();
-			}		
+		for(int i=1; i<gpspoints.length; i++) {
 			
+			if(gpspoints[i].getElevation()>gpspoints[i-1].getElevation()) {
+			elevation += gpspoints[i].getElevation()-gpspoints[i-1].getElevation();
+			}
 		}
 		return elevation;
-
 
 	}
 
 	// beregn total tiden for hele turen (i sekunder)
 	public int totalTime() {
-		int secs = gpspoints[gpspoints.length-1].getTime() - gpspoints[0].getTime();
-		return secs;
+		int tid = 0;
+		tid = gpspoints[gpspoints.length-1].getTime() - gpspoints[0].getTime();
 		
+		return tid;
 	}
 		
+	// beregn gjennomsnitshastighets mellom hver av gps punktene
+
 	public double[] speeds() {
 		
-		double [] speeds = new double [gpspoints.length-1];
+		double[] speed = new double[gpspoints.length-1];
 		
-		for (int i=0; i<speeds.length; i++) {
-			speeds[i] = GPSUtils.speed(gpspoints[i], gpspoints[i+1]);
+		for(int i=0; i<gpspoints.length-1; i++) {
+			speed[i] = GPSUtils.speed(gpspoints[i], gpspoints[i+1]);
 		}
-		return speeds;
+		
+		return speed;
 
 	}
 	
 	public double maxSpeed() {
 		
 		double maxspeed = 0;
-		double [] maxspeedtab = speeds();
 		
-		for (int i= 0; i<maxspeedtab.length-1; i++) {
-			if (maxspeedtab [i+1] > maxspeedtab[i] ) {
-				maxspeed = maxspeedtab[i+1];
-			}
-			
-		}
-		return maxspeed;
+		maxspeed = GPSUtils.findMax(speeds());
+		
+		return maxspeed; 
 		
 	}
 
 	public double averageSpeed() {
 
 		double average = 0;
-//		double [] gjennomsnitt = speeds();
-//		 for (int i=0; i<gpspoints.length-1; i++) {
-//			 average += gjennomsnitt[i];
-//		 }
-//		 average = average/gjennomsnitt.length;
-//		
-//		return average;
-//		
-		average = totalDistance()/totalTime()*3.6;
+		average = totalDistance()/totalTime()*60*60/1000;
 		return average;
 		
 	}
@@ -121,40 +112,56 @@ public class GPSComputer {
 		double kcal;
 
 		// MET: Metabolic equivalent of task angir (kcal x kg-1 x h-1)
-		double met = 0;		
+		double met = 0;
 		double speedmph = speed * MS;
-
-		// TODO - START
 		
-		throw new UnsupportedOperationException(TODO.method());
-
-		// TODO - SLUTT
+		if(speedmph<10) {
+			met = 4.0;
+		}
+		if(speedmph>=10 && speedmph<12) {
+			met = 6.0;
+		}
+		if(speedmph>=12 && speedmph<14) {
+			met = 8.0;
+		}
+		if(speedmph>=14 && speedmph<16) {
+			met = 10.0;
+		}
+		if(speedmph>=16 && speedmph<20) {
+			met = 12.0;
+		}
+		if(speedmph>=20) {
+			met = 16.0;
+		}
 		
+		kcal = met*weight*secs/3600;
+		return kcal;
 	}
-
+	
 	public double totalKcal(double weight) {
 
 		double totalkcal = 0;
 
-		// TODO - START
+		totalkcal += kcal(weight, totalTime(), averageSpeed()/3.6);
 		
-		throw new UnsupportedOperationException(TODO.method());
-
-		// TODO - SLUTT
+		return totalkcal;
 		
 	}
 	
 	private static double WEIGHT = 80.0;
-	
 	public void displayStatistics() {
+		
+		System.out.println("==============================================");
+
+		System.out.printf("%s %5s %s %n", "Total Time", ":", GPSUtils.formatTime(totalTime()));
+		System.out.printf("%s %1s %10.2f %s %n", "Total distance", ":", totalDistance()/1000, "km");
+		System.out.printf("%s%s %10.2f %s %n", "Total elevation", ":", totalElevation(), "m");
+		System.out.printf("%s %6s %10.2f %s %n", "Max speed", ":", maxSpeed(), "km/t");
+		System.out.printf("%s %2s %10.2f %s %n", "Average speed", ":", averageSpeed(), "km/t");
+		System.out.printf("%s %9s %10.2f %s %n", "Energy", ":", totalKcal(WEIGHT), "kcal");
 
 		System.out.println("==============================================");
 
-		// TODO - START
-
-		throw new UnsupportedOperationException(TODO.method());
-		
-		// TODO - SLUTT
 		
 	}
 
